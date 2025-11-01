@@ -1567,10 +1567,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 let currentValue = parseInt(manaCounterValueElement.value) || 0;
                 updateManaCounterValue(currentValue + value);
             } else if (counterType === 'turn') { 
-                let currentValue = parseInt(turnCounterValueElement.value) || 1;
-                updateTurnCounterValue(currentValue + value);
-            }
+                let currentValue = parseInt(turnCounterValueElement.value);
+        if (isNaN(currentValue)) {
+            currentValue = 1;
         }
+        updateTurnCounterValue(currentValue + value);
+    }
+}
 
         function stopAction() {
             clearTimeout(initialTimer);
