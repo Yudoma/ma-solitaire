@@ -1,61 +1,44 @@
-/* ===================================== */
-/* 1. 基本設定とボード全体のグリッドレイアウト */
-/* (デフォルト = マゾヒストモード) */
-/* ===================================== */
-
-/* 基本設定 */
 body {
     margin: 0;
     min-height: 100vh;
     display: flex; 
-    justify-content: center; /* 中央に配置 */
+    justify-content: center; 
     
-    /* ⭐ニュートラル: 背景色・文字色・フォント変更 */
-    background-color: #ffb6c1; /* ニュートラルなダークグレー */
-    font-family: 'Georgia', serif; /* ⭐修正: サディストフォントに統一 */
-    color: #ccc; /* 薄いグレー */
+    background-color: #ffb6c1; 
+    font-family: 'Georgia', serif; 
+    color: #ccc; 
     
     padding-top: 0px;
     padding-right: 0px;
     padding-bottom: 0px;
-    padding-left: 0px; /* <-- この値を調整します */
+    padding-left: 0px; 
     
-    /* 右クリックメニューの表示を抑制 */
     -webkit-user-select: none; 
     -moz-user-select: none;    
     -ms-user-select: none;     
     user-select: none;         
     
-    /* ⭐追加: テーマ切り替え時のトランジション */
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* ⭐修正: ページ全体の配置を管理するコンテナ (縦並び) */
 .main-container {
     display: flex;
-    /* ⭐変更: 縦並びにして、相手側を上に、自分側を下に配置 */
     flex-direction: column; 
-    /* プレビューとボードの間隔 */
     gap: 20px; 
-    /* 縦方向で上端に揃える */
     align-items: flex-start; 
-    align-items: stretch; /* ⭐修正: 高さを揃える */
+    align-items: stretch; 
 }
 
-/* ⭐新規追加: 相手プレイヤー側のラッパー (左右の配置は維持) */
 .opponent-wrapper {
     display: flex;
     gap: 35px; 
     align-items: flex-start;
-    align-self: stretch; /* 幅をメインコンテナいっぱいに広げる */
+    align-self: stretch; 
     
-    /* ⭐新規追加: 全体を上下反転 (対面プレイヤー向き) */
     transform: scaleY(-1); 
-    /* 上下反転による不要な余白を減らすためのネガティブマージン */
     margin-bottom: -20px; 
 }
 
-/* ⭐新規追加: 自分プレイヤー側のラッパー (レイアウトは変更しないが、後続の調整のため追加) */
 .player-wrapper {
     display: flex;
     gap: 35px; 
@@ -63,114 +46,81 @@ body {
     align-self: stretch;
 }
 
-/* ⭐新規追加: 上下反転によって逆さまになった要素を元に戻すためのクラス */
 .opponent-text-flip {
-    transform: scaleY(-1) translateZ(0); /* ⭐ translateZ(0) を追加 */
-    /* テキストはそのままでは反転すると文字が崩れるため、z-indexで前面に出す */
+    transform: scaleY(-1) translateZ(0); 
     z-index: 20; 
 }
 
-/* ⭐修正: 相手側のプレビューとLP/マナエリアの反転を解除 */
 #opponent-preview-and-lp-wrapper {
-    transform: scaleY(-1) translateZ(0); /* ⭐ translateZ(0) を追加 */
-    /* ⭐今回の修正: flex-direction を反転させ、カウンター(後続DOM)がプレビュー(先行DOM)の上に表示されるようにする */
+    transform: scaleY(-1) translateZ(0); 
     flex-direction: column-reverse;
 }
 
-/* ⭐新規追加: 相手側のサイドバーコンテナの反転を解除 */
 #opponent-sidebar-container {
-    transform: scaleY(-1) translateZ(0); /* ⭐ translateZ(0) を追加 */
+    transform: scaleY(-1) translateZ(0); 
 }
 
 
-/* ⭐追加: プレビューエリアとLP/マナカウンターを縦に並べるラッパー */
 .preview-and-lp-wrapper {
     display: flex;
-    flex-direction: column; /* 縦並び */
-    gap: 20px; /* プレビューとLPカウンターの間隔 */
-    /* 縦方向で中央に揃える */
-    align-items: center; /* ⭐修正: flex-start から center に変更 */
+    flex-direction: column; 
+    gap: 20px; 
+    align-items: center; 
 }
 
 
-/* ⭐追加: ボードと手札エリアを縦に並べるラッパー */
 .board-and-hand-wrapper {
     display: flex;
-    flex-direction: column; /* 縦並び */
-    gap: 8px; /* ボードと手札エリアの間隔 */
-    /* ラッパーの幅はボードの幅に合わせる */
+    flex-direction: column; 
+    gap: 8px; 
     width: 1200px; 
 }
 
-/* ⭐追加: サイドバーコンテナ */
 .sidebar-container {
     display: flex;
-    flex-direction: column; /* 縦積み */
+    flex-direction: column; 
     gap: 10px;
     
-    /* ⭐完成イメージに基づき、幅を 200px に設定 */
     width: 200px; 
-    flex-shrink: 0; /* 縮小しない */
+    flex-shrink: 0; 
     
-    /* ⭐高さを main-container (flex) の最大まで伸ばす */
-    /* height: 100%; は main-container が column のため無効。 */
-    /* 代わりに align-self: stretch で高さを揃える */
     align-self: stretch; 
 
-    /* 内部のスクロールのために高さを固定化 (vh から padding を引く) */
     max-height: calc(100vh - 20px); 
     box-sizing: border-box;
     
-    /* 初期状態はJSで非表示 (display: none) にする */
 }
 
-/* ⭐新規追加: サイドバーの上半分 (既存エリアのラッパー) */
 .sidebar-top-half {
-    /* height: 50%; */
-    height: calc(47% + 181.568px); /* ⭐修正: 高さを 2枠 (89.784 * 2 + 2) 分増やす */
-    display: flex; /* 内部の .sidebar-slot-area が高さを継承できるように */
+    height: calc(47% + 181.568px); 
+    display: flex; 
     flex-direction: column;
-    overflow: hidden; /* 念のため */
+    overflow: hidden; 
 }
 
-/* ⭐新規追加: サイドバーの下半分 (フリースペース) */
 .sidebar-bottom-half {
-    /* height: 50%; */
-    height: calc(47% - 181.568px); /* ⭐修正: 高さを 2枠 (89.784 * 2 + 2) 分減らす */
+    height: calc(47% - 181.568px); 
     display: flex;
     flex-direction: column;
-    /* ⭐ニュートラル: フリースペースの枠線 */
     border-top: 4px solid #555; 
     margin-top: 5px;
     padding-top: 5px;
     box-sizing: border-box;
 }
 
-/* ⭐修正: サイドバー内のスロットエリア (旧 .bottom-deck-multi-slot) */
 .sidebar-slot-area {
-    /* 縦方向に均等に高さを分割 */
-    /* flex-grow: 1; */ /* 削除 */
-    /* flex-shrink: 1; */ /* 削除 */
-    /* 高さを均等に分けるためのトリック */
-    /* height: 0; */ /* 削除 */
-    height: 100%; /* ⭐修正: 親 (.sidebar-top-half) の高さいっぱいに広がる */
+    height: 100%; 
     
-    /* 内部（ラベルとコンテナ）を縦に並べる */
     display: flex;
     flex-direction: column;
-    /* ⭐JSで切り替えるため、初期状態は非表示 */
     display: none;
 }
 
 
-/* ⭐修正: カード全体画像表示エリアのスタイル */
 .card-preview-area {
-    /* プレビュー領域のサイズを設定 */
-    /* ⭐修正: プレビュー画面のサイズを元のサイズ (422.4px x 683px) に戻す */
     width: 435px; 
     height: 717.15px;
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #333;
     border: 3px solid #555;
     
@@ -184,12 +134,10 @@ body {
     padding: 5px;
     box-sizing: border-box;
     
-    /* プレビューエリアは縮小しない */
     flex-shrink: 0; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* プレビューエリア内の画像スタイル */
 .card-preview-area img {
     max-width: 100%;
     max-height: 100%;
@@ -198,30 +146,20 @@ body {
     border-radius: 3px;
 }
 
-/* 🎯 全体のグリッドコンテナ */
 .game-board {
-    /* ラッパーの幅に合わせる */
     width: 100%; 
-    /* ⭐変更: 高さを700pxから600pxに縮小 */
-    height: 645px; 
+    height: 680px; 
     
-    /* ⭐ニュートラル: 色変更 */
     border: 4px solid #555;
     box-shadow: 0 4px 15px rgba(100, 100, 100, 0.2);
     background-color: #333;
     
-    /* CSS Grid の設定 */
     display: grid;
     
-    /* ⭐変更: 列の幅の定義 (特殊1 | バトル/スペル/マナ-広げる | 特殊2/デッキ) */
-    /* 3列構成に変更し、両サイドのゾーン幅を固定幅にする */
     grid-template-columns: var(--side-zone-width) 1fr var(--side-zone-width); 
     
-    /* * 修正後の行の高さの定義 (上段 | 中段 | 下段) */
-    /* ⭐修正: マナゾーン（3行目）をバトル/スペルゾーン（1・2行目）と同じ高さにする */
     grid-template-rows: 1fr 1fr 1fr; 
     
-    /* マス目（エリア）の配置を定義 */
     grid-template-areas:
         "special1 battle special2" 
         "special1 spell special2"  
@@ -232,9 +170,7 @@ body {
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-/* 共通のゾーンのスタイル */
 .zone {
-    /* ⭐ニュートラル: 色変更 */
     border: 2px solid #555; 
     background-color: #444; 
     
@@ -248,27 +184,22 @@ body {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ゾーン名（ヘッダー）のスタイル */
 .zone-header {
     font-size: 1em; 
     font-weight: bold;
     margin-bottom: 0px; 
     padding: 1px 3px; 
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #333;
     
     border-radius: 3px;
     z-index: 10;
     
-    /* ⭐修正: クリック機能のないヘッダーではカーソルはポインターにしない */
-    /* cursor: default (初期値) または以下を削除 */
     text-decoration: none; 
     transition: color 0.2s, text-decoration 0.2s, background-color 0.3s; 
 }
 
 
-/* 🎯 カードスロットを格納するコンテナ */
 .slot-container {
     display: flex;
     flex-wrap: wrap;
@@ -281,26 +212,21 @@ body {
     padding: 1px; 
 }
 
-/* ⭐修正: 特殊ゾーンのスロットコンテナの調整 (特殊ゾーンは縦並びを維持) */
 .special-zone-1 .slot-container,
 .special-zone-2 .slot-container {
     flex-direction: column; 
-    /* ⭐修正: 縦方向でスロットと余白を均等に配置 */
     justify-content: space-evenly; 
     align-items: center; 
     flex-wrap: nowrap; 
-    /* gapを0に設定するか削除 */
     gap: 0; 
 }
 
-/* ゾーンごとの配置割り当て */
 .special-zone-1 { 
     grid-area: special1; 
     grid-row: 1 / 3; 
 }
 .battle-zone { 
     grid-area: battle; 
-    /* 2列目全体を使用 */
     grid-column: 2 / 3;
 }
 .special-zone-2 { 
@@ -309,24 +235,19 @@ body {
 }
 .spell-zone { 
     grid-area: spell; 
-    /* 2列目全体を使用 */
     grid-column: 2 / 3;
 }
 .exclude-zone { 
     grid-area: exclude; 
-    /* ⭐追加: 1列目全体を使用 */
     grid-column: 1 / 2; 
 }
 .mana-zone { 
     grid-area: mana; 
     flex-direction: column;
-    /* ⭐変更: 2列目全体を占めるようにする */
     grid-column: 2 / 3; 
 }
 
-/* ⭐変更: デッキと墓地を横に並べるためのラッパーエリア */
 .deck-grave-wrapper {
-    /* ⭐変更: 右端の下のセル (3列目、3行目) を占める */
     grid-area: deck_temp; 
     grid-column: 3 / 4; 
     grid-row: 3 / 4;
@@ -339,38 +260,27 @@ body {
     overflow: hidden;
 }
 
-/* ⭐変更: ラッパー内の墓地ゾーンのスタイル */
 .grave-zone {
-    /* ⭐修正: 墓地ゾーンを幅いっぱいに広げる */
     flex-grow: 1; 
     width: 100%;
     grid-area: unset; 
 }
 
 
-/* 🎯 カードスロットのサイズ定義を統一 (768x1366の比率に設定) */
 :root {
-    /* 4枚横並びに最適化されたサイズ (手札などの標準サイズ) */
-    /* ⭐維持: 1.2倍のサイズ (手札、バトル、スペル、マナゾーン用) */
     --card-width: 84px; 
-    /* ⭐維持: 1.2倍のサイズ (手札、バトル、スペル、マナゾーン用) */
     --card-height: 149.64px; 
-    /* ⭐維持: 1.2倍のサイズ（今回はターゲットゾーンで個別に上書きするため、この変数は実質的に未使用だが、互換性のために残す） */
     --small-card-width: 75.6px;
-    /* ⭐維持: 1.2倍のサイズ */
     --small-card-height: 134.676px;
-    /* ⭐維持: 特殊ゾーン/墓地ゾーンの列幅の目安 (カード2枚と隙間分を少し加えた幅) */
     --side-zone-width: calc(var(--card-width) * 2 + 6px + 2px); 
     
-    /* ⭐追加: 手札エリアの高さの定義 (カード1枚分と余白) */
     --hand-area-height: calc(var(--card-height) + 100px);
 }
 
 .card-slot {
-    /* ⭐ニュートラル: 色変更 */
     background-color: #555; 
-    border: 1px dashed #888; /* 枠線1本目（点線） */
-    box-shadow: 0 0 0 1px #777 inset; /* 枠線2本目（実線） */
+    border: 1px dashed #888; 
+    box-shadow: 0 0 0 1px #777 inset; 
     
     border-radius: 3px;
     box-sizing: border-box;
@@ -380,20 +290,17 @@ body {
     overflow: hidden;
     position: relative; 
     
-    /* ⭐維持: 標準サイズ（1.2倍）をデフォルトとして適用 */
     width: var(--card-width);
     height: var(--card-height);
     
     transition: width 0.3s ease-in-out, height 0.3s ease-in-out, background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-/* 90度回転時のカードスロットのスタイル */
 .card-slot.rotated-90 {
     width: var(--card-height);
     height: var(--card-width);
 }
 
-/* スペルゾーンとバトルゾーンの `slot-container` の設定 */
 .battle-zone .slot-container,
 .spell-zone .slot-container {
     flex-wrap: nowrap;
@@ -402,13 +309,12 @@ body {
     gap: 3px;
 }
 
-/* マナゾーンの配置調整 (横並び・中央揃えを強制) */
 .mana-zone .slot-container {
     justify-content: center;
     align-content: center;
     align-items: center;
     flex-direction: row;
-    flex-wrap: nowrap; /* 折り返しを禁止 */
+    flex-wrap: nowrap; 
     justify-content: center;
     align-items: center;
     padding: 1px;
@@ -418,54 +324,38 @@ body {
     overflow: auto;
 }
 
-/* 🎯 カードスロットのサイズを手札より少し小さくする調整と、複数列・折り返しを許可 */
-
-/* 1. 墓地ゾーン: カードサイズを元のサイズ (1.0倍) に戻す */
 .grave-zone .card-slot {
-    /* ⭐修正: 1.0倍のサイズに戻す (63px) */
     width: 75.6px; 
-    /* ⭐修正: 1.0倍のサイズに戻す (112.23px) */
     height: 134.676px;
 }
 .grave-zone .slot-container {
-    flex-wrap: wrap; /* ⭐維持: 二列以上の配置を許可 */
+    flex-wrap: wrap; 
     justify-content: center;
     align-content: center;
 }
 
-/* 2. 除外ゾーン: カードサイズを元のサイズ (1.0倍) に戻す */
 .exclude-zone .card-slot {
-    /* ⭐修正: 1.0倍のサイズに戻す (63px) */
     width: 75.6px;
-    /* ⭐修正: 1.0倍のサイズに戻す (112.23px) */
     height: 134.676px;
 }
 .exclude-zone .slot-container {
-    flex-wrap: wrap; /* ⭐維持: 二列以上の配置を許可 */
-    flex-direction: row; /* ⭐維持: 横並びを基本にする */
+    flex-wrap: wrap; 
+    flex-direction: row; 
     justify-content: center;
-    align-content: center; /* ⭐修正: コンテンツ全体を中央に配置 */
+    align-content: center; 
 }
 
-/* 3. デッキゾーン (ボード下): カードサイズを元のサイズ (1.0倍) に戻す */
 .deck-zone .card-slot {
-    /* ⭐修正: 1.0倍のサイズに戻す (63px) */
     width: 75.6px;
-    /* ⭐修正: 1.0倍のサイズに戻す (112.23px) */
     height: 134.676px;
 }
 .deck-zone .slot-container {
-    flex-wrap: wrap; /* ⭐維持: 二列以上の配置を許可 */
+    flex-wrap: wrap; 
     justify-content: center;
     align-content: center;
 }
 
 
-/* ===================================== */
-/* 2. ドラッグ＆ドロップ機能関連のスタイル */
-/* ===================================== */
-
-/* 🎯 サムネイル画像コンテナのスタイル */
 .thumbnail {
     width: 100%;
     height: 100%;
@@ -480,7 +370,6 @@ body {
     z-index: 5;
 }
 
-/* 🎯 カード画像に回転のスタイルを適用 */
 .thumbnail img {
     width: 100%;
     height: 100%;
@@ -490,15 +379,11 @@ body {
     transform-origin: center;
 }
 
-/* 🎯 ドロップオーバー時の視覚的なフィードバック */
 .drag-over {
-    /* ⭐ニュートラル: 色変更 */
     background-color: #666;
 }
 
-/* 🎯 カードスロットがドロップオーバーされた時のスタイル */
 .card-slot.drag-over {
-    /* ⭐ニュートラル: 色変更 */
     background-color: #777;
     border: 2px solid #aaa;
     
@@ -507,127 +392,88 @@ body {
 }
 
 
-/* ===================================== */
-/* 3. カウンター＆手札エリアのスタイル */
-/* ===================================== */
-
-/* ⭐追加: LPカウンターとマナカウンターを横に並べるラッパー */
 .counter-wrapper {
     display: flex;
-    /* LPとMANAの間隔 */
-    gap: 7px; /* ⭐修正: 15px から 7px に縮小 */ 
-    /* 縦方向で上端に揃える */
+    gap: 7px; 
     align-items: flex-start;
-    /* プレビューエリアの幅に合わせる */
-    /* ⭐修正: プレビュー画面の幅 (403.2px) に固定 */
      width: 403.2px;
-    /* コンテンツが中央に寄るように調整 */
     justify-content: center; 
     flex-shrink: 0;
     
-    /* ⭐ここから変更 */
-    flex-wrap: nowrap; /* 折り返しを禁止 */
-    /* ⭐ここまで変更 */
+    flex-wrap: nowrap; 
 }
 
-/* 手札ゾーンを制御するラッパー */
 .hand-area-container {
-    /* ボードの幅に合わせる */
     width: 100%; 
-    /* ⭐追加: 手札エリアの高さ */
-    height: var(--hand-area-height); 
+    height: auto;
     flex-shrink: 0;
-    /* 内部を縦並びにする */
     display: flex; 
     flex-direction: column;
 }
 
-/* 手札ゾーン上部のラッパー (EXデッキ、手札/ボタン、デッキ) */
 .hand-controls-top-wrapper {
     display: flex;
-    flex-direction: row; /* 横並び */
-    justify-content: space-between; /* 両端に寄せる */
+    flex-direction: row; 
+    justify-content: space-between; 
     align-items: stretch; 
-    gap: 15px; /* フレームとデッキの間のスペース */
-    width: 100%; /* 親 (hand-area-container) の幅を占有 */
+    gap: 15px; 
+    width: 100%; 
 }
 
-/* 手札スロットとボタンを囲むフレーム */
 .hand-controls-frame {
-    /* 以前の .hand-controls-top のスタイルを適用 */
-    /* ⭐ニュートラル: 色変更 */
     border: 1px solid #555;
     background-color: #333;
 
-    /* ⭐修正: ラベルを内側に含めるために上部にパディングを追加 */
     padding: 5px 10px 10px 10px; 
     border-radius: 5px;
-    /* ⭐修正: 内部要素 (手札スロットとボタン) の配置を縦並びにする */
     display: flex;
 
     
-    /* ⭐修正: 手札スロットが横いっぱいに広がるように幅を設定 */
     flex-grow: 1; 
     flex-shrink: 1;
     
-    /* 内部の要素を中央揃えにしない */
     align-items: flex-start; 
 
     
-    /* 高さを手札エリアの幅全体に合わせる */
     height: 100%;
-    gap: 5px; /* スロットとボタンの間隔 */
-    padding-top: 5px; /* 上部の余白 */
+    gap: 5px; 
+    padding-top: 5px; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ⭐修正: hand-controls-top-wrapper に移動したデッキゾーンのスタイルを調整 */
 .hand-controls-top-wrapper > .deck-zone {
     flex-shrink: 0; 
-    /* ⭐維持: 特殊ゾーン/墓地ゾーンの幅に合わせる */
     width: var(--side-zone-width); 
     height: auto; 
     
-    /* ⭐ニュートラル: 色変更 (zone共通スタイルを継承) */
-    /* border: 2px solid #000;  */
-    /* background-color: #f8f8f8;  */
     
     padding: 1px;
     box-sizing: border-box;
     
-    /* ⭐追加: ゾーンヘッダーとスロットコンテナを中央寄せ */
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-/* ⭐修正: 下段のエリア - ラベルを内側に含めるパディングを追加 */
 .hand-area-bottom {
-    /* ⭐ニュートラル: 色変更 */
     border: 1px dashed #888;
     background-color: #555;
     
-    /* ⭐修正: ラベルを内側に含めるために上部にパディングを追加 */
-    padding: 5px; /* ⭐修正: 中身がなくなったためパディングを減らす */
+    padding: 5px; 
     border-radius: 5px;
     
-    /* 内部を横に並べる (flex-startで左に詰める) */
     display: flex;
     align-items: flex-start;
     gap: 10px;
-    /* ⭐修正: min-heightを調整 (カード高さのみに戻す) */
-    min-height: 20px; /* ⭐修正: 中身がなくなったため高さを小さくする */
+    min-height: 20px; 
     
-    /* ⭐追加: 複数の要素が並ぶため、もしスペースが足りなければ折り返す設定を追加 */
     flex-wrap: wrap; 
 }
 
-/* ⭐修正: 共通のラベルスタイルを再定義（手札・デッキの基盤） */
 .area-label {
-    font-size: 1.0em; /* ⭐修正: 1.1em から 1.0em に縮小 */
+    font-size: 1.0em; 
     font-weight: bold;
     
-    /* ⭐ニュートラル: 色変更 */
     color: #ccc; 
     
     display: block;
@@ -637,47 +483,37 @@ body {
     transition: color 0.3s, text-shadow 0.3s;
 }
 
-/* 手札ゾーンのラッパー */
 .hand-zone-wrapper {
-    flex-grow: 1; /* 手札エリアが残りのスペースを占有 */
+    flex-grow: 1; 
     padding: 0; 
 }
 
 
-/* 手札カードスロットコンテナ */
 .hand-zone-slots {
     display: flex;
     gap: 5px;
-    /* ⭐修正点: min-heightをカード1枚分の高さに戻す */
     min-height: calc(var(--card-height) + 10px); 
     
-    /* 手札エリア全体を囲む枠 */
-    /* ⭐ニュートラル: 色変更 */
     border: 1px solid #555; 
-    background-color: #222; /* body背景色と同じ */
+    background-color: #222; 
     
     padding: 5px;
     border-radius: 5px;
     
-    /* ⭐修正点: 折り返しを禁止し、横スクロールを有効化 */
     flex-wrap: nowrap; 
     overflow-x: auto; 
     
     margin-top: 0; 
     
-    /* ⭐追加: 手札の縦幅をフレーム内の残りのスペース全体に広げる */
     flex-grow: 1; 
     
-    /* ⭐修正: 上下中央寄せを追加 */
     align-items: center; 
     
-    /* ⭐修正: 左右中央寄せを追加 */
     justify-content: center; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
 
-/* ドロー/リセットボタンエリア */
 .hand-buttons {
     display: flex;
     flex-direction: column;
@@ -686,7 +522,6 @@ body {
     padding-top: 0; 
 }
 
-/* ⭐新規追加: 相手側(反転)のボタンコンテナの並び順を逆にする (プレイヤー側と表示順を合わせるため) */
 .opponent-wrapper .hand-buttons {
     flex-direction: column-reverse;
 }
@@ -701,21 +536,17 @@ body {
     line-height: 1.2;
 }
 
-/* ドロー/リセット/装飾モードボタンのスタイル */
 .draw-btn {
     padding: 3px 12px;
     font-size: 1em;
     font-weight: bold;
     
-    /* ===== ⭐ここから変更 1/3 ===== */
-    /* ⭐修正: 色変更 (デフォルト=黄色系) */
     color: #333;
-    background-color: #ffcc00; /* 黄色 */
+    background-color: #ffcc00; 
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    box-shadow: 0 3px #997a00; /* 暗い黄色 */
-    /* ===== ⭐ここまで変更 1/3 ===== */
+    box-shadow: 0 3px #997a00; 
     
     transition: background-color 0.1s, box-shadow 0.1s, transform 0.1s, color 0.1s;
     line-height: 1.2;
@@ -723,27 +554,18 @@ body {
 }
 
 .draw-btn:hover {
-    /* ===== ⭐ここから変更 2/3 ===== */
-    /* ⭐修正: 色変更 (黄色系) */
     background-color: #ffdb4d;
-    /* ===== ⭐ここまで変更 2/3 ===== */
 }
 
 .draw-btn:active {
-    /* ===== ⭐ここから変更 3/3 ===== */
-    /* ⭐修正: 色変更 (黄色系) */
     box-shadow: 0 0 #997a00;
     transform: translateY(3px);
-    /* ===== ⭐ここまで変更 3/3 ===== */
 }
 
-/* === ⭐ 新規追加: S/Mトグルボタンのスタイル === */
-
-/* 1. サディストモード (赤系) */
 .draw-btn[data-mode="sadist"] {
-    background-color: #cc0000; /* 装飾モードアクティブ時の色 */
+    background-color: #cc0000; 
     box-shadow: 0 3px #800000;
-    color: white; /* 文字色を白に */
+    color: white; 
 }
 .draw-btn[data-mode="sadist"]:hover {
     background-color: #e60000;
@@ -753,11 +575,9 @@ body {
     transform: translateY(3px);
 }
 
-/* ===== ⭐ここから変更 (追加) 4/3 ===== */
-/* 2. マゾヒストモード (青系) */
 .draw-btn[data-mode="masochist"] {
-    background-color: #007bff; /* マゾヒストの青 */
-    box-shadow: 0 3px #0056b3; /* 暗い青 */
+    background-color: #007bff; 
+    box-shadow: 0 3px #0056b3; 
     color: white;
 }
 .draw-btn[data-mode="masochist"]:hover {
@@ -767,22 +587,18 @@ body {
     box-shadow: 0 0 #0056b3;
     transform: translateY(3px);
 }
-/* ===== ⭐ここまで変更 (追加) 4/3 ===== */
 
-/* ⭐追加: .hand-buttonsが縦並びになった場合のボタンの幅を調整 */
 .hand-controls-top-wrapper > .hand-buttons .draw-btn {
-    width: 100%; /* 親要素の縦長コンテナの幅いっぱいに広げる */
+    width: 100%; 
 }
 
-/* カウンターグループのスタイル */
 .hand-counter-group {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px; /* ⭐修正: 5px から 4px に縮小 */
-    padding: 1px; /* ⭐修正: 10px から 8px に縮小 */
+    gap: 1px; 
+    padding: 1px; 
     
-    /* ⭐ニュートラル: 色変更 */
     border: 2px solid #555;
     background-color: #333;
     
@@ -791,41 +607,33 @@ body {
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* カウンターボタンと入力欄のスタイル */
 .counter-buttons {
     display: flex;
     align-items: center;
     gap: 1px;
 }
 
-/* ===== ⭐ここから変更 (ターンカウンターのレイアウト) ===== */
-/* ⭐追加: ターンカウンターのみボタンと入力欄を縦並びにする */
 #turn-counter-group .counter-buttons,
 #opponent-turn-counter-group .counter-buttons {
     flex-direction: column;
-    width: 35px; /* ⭐修正: 60px から 50px に縮小 */
+    width: 35px; 
 }
 
-/* ⭐追加: ターンカウンターのボタンの幅を100%にする */
 #turn-counter-group .counter-buttons .counter-btn,
 #opponent-turn-counter-group .counter-buttons .counter-btn {
     width: 100%;
-    box-sizing: border-box; /* paddingを含める */
-    padding-top: 4.5px; /* 少し詰める */
-    padding-bottom: 4px; /* 少し詰める */
+    box-sizing: border-box; 
+    padding-top: 4.5px; 
+    padding-bottom: 4px; 
 }
-/* ===== ⭐ここまで変更 ===== */
 
 
-/* シンプルなカウンターボタンのスタイル（LP/マナ） */
 .simple-counter-buttons button {
-    padding: 4px 8px; /* ⭐修正: 5px 10px から縮小 */
-    font-size: 1.1em; /* ⭐修正: 1.2em から縮小 */
+    padding: 4px 8px; 
+    font-size: 1.1em; 
     font-weight: bold;
     
-    /* ⭐修正: 色変更 (グレー系) */
     border: 1px solid #ccc;
-    /* background-color は .counter-btn 側で指定 */
     
     border-radius: 5px;
     cursor: pointer;
@@ -833,33 +641,20 @@ body {
 }
 
 .simple-counter-buttons button:hover {
-    /* ⭐修正: 色変更 (グレー系) */
     background-color: #d0d0d0;
 }
 
-/* ⭐修正: カウンターボタンの押下時の沈むモーション (既存のボタン要素) */
-/* .simple-counter-buttons button は、.counter-btn に該当すると想定される */
-/* .simple-counter-buttons button:active {
-    transform: translateY(2px);
-} */
-/* ↑ L678 で .counter-btn:active と統合するため削除 */
 
-
-/* ⭐新規追加: .counter-btn および .card-rotate-btn の基本スタイルと沈むモーション */
-/* 既存のスタイルを考慮し、他のボタンと同様に立体感を与えるための基本設定を追加 */
-/* ⭐修正: .simple-counter-buttons button も統合 */
 .counter-btn,
 .card-rotate-btn,
 .simple-counter-buttons button {
-    /* 汎用ボタンの基本スタイル */
-    padding: 4px 8px; /* ⭐修正: 5px 10px から縮小 */
-    font-size: 1.1em; /* ⭐修正: 1.2em から縮小 */
+    padding: 4px 8px; 
+    font-size: 1.1em; 
     font-weight: bold;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     
-    /* ⭐修正: 色変更 (グレー系) */
     background-color: #f0f0f0; 
     color: #333;
     box-shadow: 0 2px #b0b0b0; 
@@ -867,34 +662,28 @@ body {
     transition: background-color 0.1s, box-shadow 0.1s, transform 0.1s, color 0.1s; 
 }
 
-/* ⭐新規追加: .counter-btn および .card-rotate-btn の押下時の沈むモーション */
-/* ⭐修正: .simple-counter-buttons button:active も統合 */
 .counter-btn:active,
 .card-rotate-btn:active,
 .simple-counter-buttons button:active {
-    /* 影を消し、2px沈ませる */
-    /* ⭐修正: 色変更 (グレー系) */
     box-shadow: 0 0 #b0b0b0; 
     transform: translateY(2px); 
 }
 
 
 .simple-counter-buttons input[type="number"] {
-    width: 20px; /* ⭐修正: 60px から 50px に縮小 */
+    width: 20px; 
     text-align: center;
-    padding: 4px; /* ⭐修正: 5px から 4px に縮小 */
-    font-size: 1.1em; /* ⭐修正: 1.2em から 1.1em に縮小 */
+    padding: 4px; 
+    font-size: 1.1em; 
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #444;
     border: 1px solid #666;
     color: #ccc;
     
     border-radius: 5px;
-    -moz-appearance: textfield; /* Firefoxで矢印を非表示 */
+    -moz-appearance: textfield; 
 }
 
-/* Chrome, Safari, Edgeで矢印を非表示 */
 .simple-counter-buttons input::-webkit-outer-spin-button,
 .simple-counter-buttons input::-webkit-inner-spin-button {
     -webkit-appearance: none;
@@ -902,46 +691,31 @@ body {
 }
 
 
-/* EXデッキ (サイドデッキ) のゾーン調整 */
 .side-deck-zone {
-    /* ⭐修正: flex-growを0に設定して幅を固定 */
     flex-grow: 0; 
-    /* デッキスロットの幅に固定 */
     width: var(--side-zone-width); 
-    /* 高さも手札エリアに合わせる */
     height: 100%;
 }
 
 
-/* ===================================== */
-/* 4. サイドバーのスタイル (裏面スロット) */
-/* ===================================== */
-
-/* ⭐修正: サイドバー内のスロットコンテナのスタイル */
 .sidebar-slot-area .deck-back-slot-container {
-    /* 縦方向にスクロールさせるための調整 */
-    /* height: 100%; */ /* 削除 */
-    flex-grow: 1; /* ⭐追加: 残りの高さをすべて占める */
-    height: 0; /* ⭐追加: flex-grow のためのトリック */
+    flex-grow: 1; 
+    height: 0; 
     width: 100%; 
     overflow-y: auto; 
     overflow-x: hidden;
     padding: 0px;
-    gap: 2px; /* スロット間の間隔を5pxに設定 */
+    gap: 2px; 
 
-    /* ⭐修正: 内部を折り返しありの横並びにする */
     display: flex; 
     flex-wrap: wrap; 
     flex-direction: row;
     
-    /* 均等に配置 */
     justify-content: space-evenly; 
     align-content: flex-start;
 }
 
-/* ⭐新規追加: フリースペースのスロットコンテナ */
 .free-space-slot-container {
-    /* .sidebar-slot-area .deck-back-slot-container (L.754) と同様のスタイルを適用 */
     height: 100%; 
     width: 100%; 
     overflow-y: auto; 
@@ -956,12 +730,9 @@ body {
 }
 
 
-/* ⭐修正: サイドバー内のスロットサイズを元のサイズ (1.0倍) に戻す */
 .sidebar-slot-area .card-slot,
 .free-space-slot-container .card-slot {
-    /* ⭐修正: 1.0倍のサイズに戻す (63px) */
     width: 50.4px;
-    /* ⭐修正: 1.0倍のサイズに戻す (112.23px) */
     height: 89.784px;
     flex-shrink: 0;
 }
@@ -970,64 +741,49 @@ body {
     margin-bottom: 5px;
 }
 
-/* ===== ⭐ここから追加 (インポート/エクスポートボタン) ===== */
-
-/* ⭐新規追加: サイドバー内のボタンコンテナ */
 .sidebar-button-container {
     display: flex;
     flex-direction: column;
-    gap: 5px; /* ボタン間の隙間 */
-    padding: 5px 2px 2px 2px; /* 上下のパディング */
-    flex-shrink: 0; /* 縮まないようにする */
+    gap: 5px; 
+    padding: 5px 2px 2px 2px; 
+    flex-shrink: 0; 
 }
 
-/* ⭐新規追加: サイドバー内のボタンは .draw-btn のスタイルを流用 */
 .sidebar-button-container .draw-btn {
-    width: 100%; /* コンテナ幅いっぱいに広げる */
-    padding: 5px 8px; /* 少し小さめのパディング */
-    font-size: 0.9em; /* 少し小さめのフォント */
-    box-shadow: 0 2px #997a00; /* 影を少し浅く */
+    width: 100%; 
+    padding: 5px 8px; 
+    font-size: 0.9em; 
+    box-shadow: 0 2px #997a00; 
 }
 
-/* ⭐新規追加: サイドバーボタンの押下時 */
 .sidebar-button-container .draw-btn:active {
     box-shadow: 0 0 #997a00;
-    transform: translateY(2px); /* 影の高さ(2px)に合わせる */
+    transform: translateY(2px); 
 }
 
-/* ⭐新規追加: 相手側のサイドバーボタン押下時の反転補正 */
 .opponent-wrapper .sidebar-button-container .draw-btn:active {
-    box-shadow: 0 0; /* 影の色に関わらず 0 0 にする */
-    transform: translateY(-2px) scaleY(-1); /* 押し込む方向 (Y軸反転のためマイナス) */
+    box-shadow: 0 0; 
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* ⭐新規追加: 盤面反転時のプレイヤー側サイドバーボタン押下時の反転補正 */
 body.board-flipped .player-wrapper .sidebar-button-container .draw-btn:active {
     box-shadow: 0 0; 
-    transform: translateY(-2px) scaleY(-1); /* 押し込む方向 (Y軸反転のためマイナス) */
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* ⭐新規追加: 盤面反転時の相手側サイドバーボタン押下時の補正解除 */
 body.board-flipped .opponent-wrapper .sidebar-button-container .draw-btn:active {
     box-shadow: 0 0;
-    transform: translateY(2px); /* 通常の押下 */
+    transform: translateY(2px); 
 }
-/* ===== ⭐ここまで追加 ===== */
 
 
-/* ===================================== */
-/* 5. ⭐新規追加: メインゾーン表示用 */
-/* ===================================== */
-
-/* メインゾーンのスロット内の画像 */
 .card-slot img.zone-image {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* スロット全体を覆うように拡大 */
-    display: none; /* 初期状態では非表示 */
+    object-fit: cover; 
+    display: none; 
 }
 
-/* メインゾーンスロット内の枚数表示用 */
 .card-slot .count-overlay {
     position: absolute;
     top: 50%;
@@ -1041,28 +797,19 @@ body.board-flipped .opponent-wrapper .sidebar-button-container .draw-btn:active 
     border-radius: 5px;
     z-index: 10;
     user-select: none;
-    pointer-events: none; /* クリックイベントを通過させる */
-    display: none; /* 初期状態では非表示 */
+    pointer-events: none; 
+    display: none; 
 }
 
-/* カードがないスロットの背景を濃くする */
 .card-slot[data-has-card="false"] {
-    /* ⭐ニュートラル: 色変更 */
-    background-color: #444; /* 背景を濃くする */
+    background-color: #444; 
 }
-/* カードがあるスロット（サムネイルがある場合）の背景を非表示 */
 .card-slot:has(.thumbnail) {
     background-color: transparent;
     border: 1px dashed transparent;
     box-shadow: none;
 }
 
-/* ===================================== */
-/* 6. ⭐装飾修正: ゾーンヘッダーの装飾 */
-/* ===================================== */
-
-/* ===== ⭐ここから変更 (セレクタの優先度を上げます) ===== */
-/* 除外ゾーン、墓地ゾーン、EXデッキ（サイドデッキ）、デッキ（手札エリア上部）のヘッダーに装飾を適用 */
 .player-wrapper .exclude-zone .zone-header,
 .player-wrapper .grave-zone .zone-header,
 .player-wrapper .side-deck-zone .zone-header,
@@ -1071,37 +818,28 @@ body.board-flipped .opponent-wrapper .sidebar-button-container .draw-btn:active 
 .opponent-wrapper .grave-zone .zone-header,
 .opponent-wrapper .side-deck-zone .zone-header,
 .opponent-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header {
-/* ===== ⭐ここまで変更 ===== */
-
-    /* draw-btnと類似の装飾 */
-    padding: 4px 8px; /* パディングを少し調整 */
+    padding: 4px 8px; 
     font-size: 1em;
     font-weight: bold;
     
-    /* ===== ⭐ここから変更 1/3 ===== */
-    /* ⭐修正: 色変更 (デフォルト=黄色系) */
     color: #333;
     background-color: #ffcc00; 
     box-shadow: 0 2.5px #997a00; 
-    /* ===== ⭐ここまで変更 1/3 ===== */
     
     border: none;
     border-radius: 5px;
     
-    cursor: pointer; /* ⭐修正: クリック可能であることを示すカーソルに変更 */
+    cursor: pointer; 
     
-    transition: background-color 0.1s, box-shadow 0.1s, transform 0.1s, color 0.1s; /* ⭐修正: transformも遷移対象に追加 */
+    transition: background-color 0.1s, box-shadow 0.1s, transform 0.1s, color 0.1s; 
     line-height: 1.2;
     text-align: center;
     
-    /* ゾーンヘッダーがゾーン幅に広がりすぎないように調整 */
     width: auto; 
     max-width: 95%;
-    margin-bottom: 5px; /* 下部マージンを少し増やしてスロットと区別 */
+    margin-bottom: 5px; 
 }
 
-/* ホバー効果 (クリック可能な要素ではないため、装飾の強調のみ) */
-/* ===== ⭐ここから変更 (セレクタの優先度を上げます) ===== */
 .player-wrapper .exclude-zone .zone-header:hover,
 .player-wrapper .grave-zone .zone-header:hover,
 .player-wrapper .side-deck-zone .zone-header:hover,
@@ -1110,16 +848,9 @@ body.board-flipped .opponent-wrapper .sidebar-button-container .draw-btn:active 
 .opponent-wrapper .grave-zone .zone-header:hover,
 .opponent-wrapper .side-deck-zone .zone-header:hover,
 .opponent-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header:hover {
-/* ===== ⭐ここまで変更 ===== */
-
-    /* ===== ⭐ここから変更 2/3 ===== */
-    /* ⭐修正: 色変更 (黄色系) */
     background-color: #ffdb4d;
-    /* ===== ⭐ここまで変更 2/3 ===== */
 }
 
-/* ⭐新規追加: ゾーンヘッダーの押下時のスタイル (draw-btn:activeをコピー) */
-/* ===== ⭐ここから変更 (セレクタの優先度を上げます) ===== */
 .player-wrapper .exclude-zone .zone-header:active,
 .player-wrapper .grave-zone .zone-header:active,
 .player-wrapper .side-deck-zone .zone-header:active,
@@ -1128,21 +859,11 @@ body.board-flipped .opponent-wrapper .sidebar-button-container .draw-btn:active 
 .opponent-wrapper .grave-zone .zone-header:active,
 .opponent-wrapper .side-deck-zone .zone-header:active,
 .opponent-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header:active {
-/* ===== ⭐ここまで変更 ===== */
-
-    /* ===== ⭐ここから変更 3/3 ===== */
-    /* ⭐修正: 色変更 (黄色系) */
-    box-shadow: 0 0 #997a00; /* 既存の影の色に合わせて影を消失させる */
-    transform: translateY(2px); /* 既存の影の高さ(2px)に合わせて移動 */
-    /* ===== ⭐ここまで変更 3/3 ===== */
+    box-shadow: 0 0 #997a00; 
+    transform: translateY(2px); 
 }
 
-/* ===================================== */
-/* 7. ⭐新規追加: 装飾モードのUI制御 */
-/* ===================================== */
-
-/* ⭐修正: プレイヤー側が装飾モードの時 */
-body.player-decoration-mode-active .opponent-wrapper, /* 相手側全体 */
+body.player-decoration-mode-active .opponent-wrapper, 
 body.player-decoration-mode-active .player-wrapper .preview-and-lp-wrapper,
 body.player-decoration-mode-active .player-wrapper .sidebar-container,
 body.player-decoration-mode-active .player-wrapper .game-board .special-zone-1,
@@ -1161,8 +882,7 @@ body.player-decoration-mode-active .player-wrapper .hand-area-container #sm-togg
     transition: opacity 0.3s ease;
 }
 
-/* ⭐修正: 相手側が装飾モードの時 */
-body.opponent-decoration-mode-active .player-wrapper, /* 自分側全体 */
+body.opponent-decoration-mode-active .player-wrapper, 
 body.opponent-decoration-mode-active .opponent-wrapper .preview-and-lp-wrapper,
 body.opponent-decoration-mode-active .opponent-wrapper .sidebar-container,
 body.opponent-decoration-mode-active .opponent-wrapper .game-board .special-zone-1,
@@ -1182,364 +902,237 @@ body.opponent-decoration-mode-active .opponent-wrapper .hand-area-container #opp
     transition: opacity 0.3s ease;
 }
 
-/* ===================================== */
-/* ⭐最終修正: 上下反転ラッパー内のすべてのボタン修正 */
-/* ===================================== */
-
-/* 1. LP/マナカウンター、汎用ボタン（回転ボタンなど）の沈むモーション修正 */
 .opponent-wrapper .counter-btn:active,
 .opponent-wrapper .card-rotate-btn:active,
 .opponent-wrapper .simple-counter-buttons button:active {
-    /* 親の scaleY(-1) の影響下で、translateY(2px) を正しく下向きに作用させるため、
-       沈むモーション全体を再度 scaleY(-1) で反転させる */
-    /* transform: translateY(2px) scaleY(-1); */
-    transform: translateY(-2px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* 2. EXデッキ、デッキ、除外、墓地ゾーンのヘッダーの沈むモーション修正 */
 .opponent-wrapper .exclude-zone .zone-header:active,
 .opponent-wrapper .grave-zone .zone-header:active,
 .opponent-wrapper .side-deck-zone .zone-header:active,
 .opponent-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header:active {
-    /* クリック時に反転の打ち消し効果を適用することで、沈む動作を正しく下向きに設定 */
-    /* transform: translateY(2px) scaleY(-1); */
-    transform: translateY(-2px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* ⭐新規追加: 3. ドロー/リセットボタン (.draw-btn) の沈むモーション修正 */
 .opponent-wrapper .draw-btn:active {
-    /* .draw-btn の沈む効果は translateY(3px) であるため、対応する transform と box-shadow を設定 */
-    box-shadow: 0 0; /* ⭐修正: 影の色に関わらず 0 0 にする (元の: #997a00) */
-    /* transform: translateY(3px) scaleY(-1); */
-    transform: translateY(-3px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    box-shadow: 0 0; 
+    transform: translateY(-3px) scaleY(-1); 
 }
 
-/* ⭐ここから追加 */
-/* ⭐新規追加: 4. メインゾーンの枚数カウンターの反転解除 */
 .opponent-wrapper .count-overlay {
-    /* 既存の translate(-50%, -50%) に scaleY(-1) を追加 */
-    transform: translate(-50%, -50%) scaleY(-1) translateZ(0); /* ⭐ translateZ(0) を追加 */
-    z-index: 20; /* テキストが前面に来るように */
+    transform: translate(-50%, -50%) scaleY(-1) translateZ(0); 
+    z-index: 20; 
 }
-/* ⭐ここまで追加 */
 
-
-/* * ⭐修正: 
- * 相手側(opponent-wrapper)のUIのうち、反転を解除した
- * #opponent-preview-and-lp-wrapper 内部のボタン (LP/マナカウンター) は、
- * :active時の反転補正 (scaleY(-1)) が不要になるため、
- * 通常の沈むモーション (translateY(2px)のみ) に上書きする。
- */
 .opponent-wrapper #opponent-preview-and-lp-wrapper .counter-btn:active,
 .opponent-wrapper #opponent-preview-and-lp-wrapper .simple-counter-buttons button:active {
-    /* 通常の :active 状態 (L520) に戻す */
-    /* ⭐修正: 色変更 (グレー系) */
     box-shadow: 0 0 #b0b0b0; 
     transform: translateY(2px); 
 }
 
-/* ===== ⭐ここから変更 (文字反転の修正) ===== */
-/*
- * ⭐修正:
- * #opponent-preview-and-lp-wrapper (親) ですでに反転解除されているため、
- * 内部の .opponent-text-flip (子) の反転解除 (scaleY(-1)) を
- * さらに打ち消す (scaleY(1) = 通常表示)
- */
 .opponent-wrapper #opponent-preview-and-lp-wrapper .opponent-text-flip {
-    transform: scaleY(1); /* L.79 の scaleY(-1) を上書き */
+    transform: scaleY(1); 
 }
-/* ===== ⭐ここまで変更 ===== */
 
-/* 補足:
- * - 装飾モードボタンがもし .draw-btn クラスを使用していれば、上記で対応できます。
- * - 装飾モードボタンが .counter-btn や .card-rotate-btn と同じ汎用ボタンであれば、
- * 最初のセレクタで対応できています。
- */
-
-
-/* ===================================== */
-/* 8. ⭐新規追加: 盤面反転モードのスタイル */
-/* ===================================== */
-
-/* 1. 全体を上下入れ替え */
 body.board-flipped .main-container {
     flex-direction: column-reverse;
 }
 
-/* 2. 相手側ラッパー (通常は反転) の反転を解除 */
 body.board-flipped .opponent-wrapper {
     transform: scaleY(1);
     margin-bottom: 0;
 }
 
-/* 3. 相手側テキスト (通常は反転解除済み) の反転を解除 (二重反転の解除) */
 body.board-flipped .opponent-text-flip {
     transform: scaleY(1);
 }
 
-/* 4. 相手側サイドバー (通常は反転解除済み) の反転を解除 (二重反転の解除) */
 body.board-flipped #opponent-sidebar-container {
     transform: scaleY(1);
 }
 
-/* 5. 相手側プレビュー (通常は反転解除済み) の反転を解除 (二重反転の解除) */
-/* ⭐重要: flex-direction を column-reverse から column に戻す */
 body.board-flipped #opponent-preview-and-lp-wrapper {
     transform: scaleY(1);
     flex-direction: column; 
 }
 
-/* 6. 反転解除に伴い、:active 時の沈むモーション補正 (scaleY(-1)) を元に戻す */
-
-/* 6a. 汎用ボタン */
 body.board-flipped .opponent-wrapper .counter-btn:active,
 body.board-flipped .opponent-wrapper .card-rotate-btn:active,
 body.board-flipped .opponent-wrapper .simple-counter-buttons button:active {
-    /* L520 の .counter-btn:active と同じスタイル */
-    /* ⭐修正: 色変更 (グレー系) */
     box-shadow: 0 0 #b0b0b0; 
     transform: translateY(2px); 
 }
 
-/* 6b. ゾーンヘッダー */
 body.board-flipped .opponent-wrapper .exclude-zone .zone-header:active,
 body.board-flipped .opponent-wrapper .grave-zone .zone-header:active,
 body.board-flipped .opponent-wrapper .side-deck-zone .zone-header:active,
 body.board-flipped .opponent-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header:active {
-    /* L730 の :active スタイル */
-    /* ⭐修正: 色変更 (黄色系) */
     box-shadow: 0 0 #997a00;
     transform: translateY(2px); 
 }
 
-/* 6c. ドロー/リセットボタン */
 body.board-flipped .opponent-wrapper .draw-btn:active {
-    /* L574 の .draw-btn:active スタイル */
-    box-shadow: 0 0; /* ⭐修正: 影の色に関わらず 0 0 にする (元の: #997a00) */
+    box-shadow: 0 0; 
     transform: translateY(3px);
 }
 
-/* ⭐ここから追加 */
-/* ⭐新規追加: 6d. 相手側メインゾーンの枚数カウンターの反転解除を解除 */
 body.board-flipped .opponent-wrapper .count-overlay {
-    /* デフォルトの transform (L775) に戻す */
     transform: translate(-50%, -50%); 
 }
-/* ⭐ここまで追加 */
 
-/* ⭐ 6d. (盤面反転対応) 相手側手札ボタンの並び順を通常(column)に戻す */
 body.board-flipped .opponent-wrapper .hand-buttons {
     flex-direction: column;
 }
 
-/* === ⭐ 修正・追加 (ここから) === */
 
-/* 7. プレイヤー側ラッパーを反転させる */
 body.board-flipped .player-wrapper {
     transform: scaleY(-1);
-    margin-bottom: -20px; /* opponent-wrapper と同様のマージン調整 */
+    margin-bottom: -20px; 
 }
 
-/* 8. プレイヤー側の反転させたくない要素の反転を解除 */
-
-/* 8a. プレイヤー側テキスト (反転のみ) */
 body.board-flipped .player-wrapper .area-label,
 body.board-flipped .player-wrapper .lp-counter-input,
 body.board-flipped .player-wrapper .mana-counter-input,
-body.board-flipped .player-wrapper .turn-counter-input, /* ⭐ ターンカウンター（クラス名が不明なため仮） */
+body.board-flipped .player-wrapper .turn-counter-input, 
 body.board-flipped .player-wrapper .card-preview-area p {
     transform: scaleY(-1);
     z-index: 20; 
 }
 
-/* 8a-2. プレイヤー側ボタン類 (沈むモーションあり・チラつき対策) */
-/* * :active 時に transform が変更される要素は、
- * 通常時も translateY(0) を明示することで描画のチラつきを抑止する
- */
 body.board-flipped .player-wrapper .zone-header,
 body.board-flipped .player-wrapper .draw-btn,
 body.board-flipped .player-wrapper .counter-btn,
 body.board-flipped .player-wrapper .card-rotate-btn,
 body.board-flipped .player-wrapper .simple-counter-buttons button {
-    transform: translateY(0) scaleY(-1); /* ⭐ translateY(0) を明示 */
+    transform: translateY(0) scaleY(-1); 
     z-index: 20;
 }
 
-/* 8b. プレイヤー側プレビューエリア */
 body.board-flipped .player-wrapper .preview-and-lp-wrapper {
     transform: scaleY(-1);
-    /* プレビュー(先行DOM)がカウンター(後続DOM)の上に表示されるようにする */
     flex-direction: column-reverse; 
 }
 
-/* 8c. プレイヤー側サイドバー */
 body.board-flipped .player-wrapper #sidebar-container {
      transform: scaleY(-1);
 }
 
-/* ⭐ここから追加 */
-/* ⭐新規追加: 8d. プレイヤー側メインゾーンの枚数カウンターの反転解除 */
 body.board-flipped .player-wrapper .count-overlay {
     transform: translate(-50%, -50%) scaleY(-1);
     z-index: 20;
 }
-/* ⭐ここまで追加 */
 
 
-/* * ===== ⭐ここが修正点です (ここから)=====
- */
-/* 8d. プレビューエリアとサイドバー内部の要素の二重反転をキャンセル */
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .area-label,
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .counter-btn,
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .lp-counter-input,
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .mana-counter-input,
-body.board-flipped .player-wrapper .preview-and-lp-wrapper .turn-counter-input, /* ⭐ ターンカウンター（クラス名が不明なため仮） */
+body.board-flipped .player-wrapper .preview-and-lp-wrapper .turn-counter-input, 
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .card-preview-area p,
 body.board-flipped .player-wrapper #sidebar-container .area-label,
 body.board-flipped .player-wrapper .sidebar-bottom-half .area-label {
-    transform: scaleY(1); /* L894 の scaleY(-1) を打ち消す */
+    transform: scaleY(1); 
 }
-/* * ===== ⭐ここが修正点です (ここまで)=====
- */
 
 
-/* 9. プレイヤー側: :active 時の沈むモーション補正 (opponent-wrapperと同様) */
-
-/* 9a. 汎用ボタン */
 body.board-flipped .player-wrapper .counter-btn:active,
 body.board-flipped .player-wrapper .card-rotate-btn:active,
 body.board-flipped .player-wrapper .simple-counter-buttons button:active {
-    /* transform: translateY(2px) scaleY(-1); */
-    transform: translateY(-2px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* 9b. ゾーンヘッダー */
 body.board-flipped .player-wrapper .exclude-zone .zone-header:active,
 body.board-flipped .player-wrapper .grave-zone .zone-header:active,
 body.board-flipped .player-wrapper .side-deck-zone .zone-header:active,
 body.board-flipped .player-wrapper .hand-controls-top-wrapper > .deck-zone .zone-header:active {
-    /* transform: translateY(2px) scaleY(-1); */
-    transform: translateY(-2px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    transform: translateY(-2px) scaleY(-1); 
 }
 
-/* 9c. ドロー/リセットボタン */
 body.board-flipped .player-wrapper .draw-btn:active {
-    box-shadow: 0 0; /* ⭐修正: 影の色に関わらず 0 0 にする */
-    /* transform: translateY(3px) scaleY(-1); */
-    transform: translateY(-3px) scaleY(-1); /* ⭐修正: 押し込む方向 (Y軸反転のためマイナス) */
+    box-shadow: 0 0; 
+    transform: translateY(-3px) scaleY(-1); 
 }
 
-/* ⭐ 9d. (盤面反転対応) プレイヤー側手札ボタンの並び順を反転(column-reverse)させる */
 body.board-flipped .player-wrapper .hand-buttons {
     flex-direction: column-reverse;
 }
 
-/* 10. プレイヤー側プレビュー内のボタンの:active補正を解除 (opponent-wrapperと同様) */
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .counter-btn:active,
 body.board-flipped .player-wrapper .preview-and-lp-wrapper .simple-counter-buttons button:active {
-    /* ⭐修正: 色変更 (グレー系) */
     box-shadow: 0 0 #b0b0b0; 
     transform: translateY(2px); 
 }
 
-/* ===== ⭐ここから追加 (L.976 付近) ===== */
 
-/* 11. 反転解除されたサイドバー内のボタンの :active 補正を解除 */
-
-/* A. 非反転時: 相手側サイドバー (.opponent-wrapper #opponent-sidebar-container) */
 .opponent-wrapper #opponent-sidebar-container .draw-btn:active {
-    /* 通常のボタン押下スタイル (L.823) に戻す */
     box-shadow: 0 0 #997a00;
     transform: translateY(2px);
 }
 
-/* B. 盤面反転時: プレイヤー側サイドバー (body.board-flipped .player-wrapper #sidebar-container) */
 body.board-flipped .player-wrapper #sidebar-container .draw-btn:active {
-    /* 通常のボタン押下スタイル (L.823) に戻す */
     box-shadow: 0 0 #997a00;
     transform: translateY(2px);
 }
 
-/* ===== ⭐ここから追加 ===== */
-/* 12. 反転解除されたプレイヤー側サイドバー内のボタン (通常時) の二重反転を解除 */
 body.board-flipped .player-wrapper #sidebar-container .draw-btn {
-    transform: none; /* L.1186 の transform: translateY(0) scaleY(-1) を打ち消す */
+    transform: none; 
 }
 
-/* === ⭐ 修正・追加 (ここまで) === */
 
-
-/* ===================================== */
-/* 8b. ⭐新規追加: マゾヒストモードの装飾スタイル (デフォルト) */
-/* ===================================== */
-
-/* --- マゾヒストモード (デフォルト: クラスなし) --- */
-/* (サディストモードでないラッパー) */
-
-/* ラッパー自体の背景色・フォント */
 .player-wrapper,
 .opponent-wrapper {
-    /* ⭐マゾヒスト: 背景色・文字色・フォント変更 */
-    background-color: #1a1a2e; /* 濃い紺色 */
-    font-family: 'Georgia', serif; /* ⭐修正: サディストフォントに統一 */
-    color: #e0e0e0; /* 薄いグレー */
+    background-color: #1a1a2e; 
+    font-family: 'Georgia', serif; 
+    color: #e0e0e0; 
     
-    /* ラッパーの角を丸め、パディングを追加してbodyの背景と分離する */
     border-radius: 10px;
     padding: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,0.5);
     
-    /* トランジション */
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s, padding 0.3s, border-radius 0.3s;
 }
 
-/* プレビューエリア */
 .player-wrapper .card-preview-area,
 .opponent-wrapper .card-preview-area {
     background-color: #2a2a4e;
     border: 3px solid #5a5a9a;
 }
-/* プレビューエリアのテキスト */
 .player-wrapper .card-preview-area p,
 .opponent-wrapper .card-preview-area p {
     color: #e0e0e0;
 }
 
-/* 盤面 */
 .player-wrapper .game-board,
 .opponent-wrapper .game-board {
-    border: 4px solid #4a4a88; /* 暗い青紫 */
-    box-shadow: 0 4px 15px rgba(120, 120, 200, 0.2); /* 青みがかった影 */
-    background-color: #2a2a4e; /* 濃い青紫の背景 */
+    border: 4px solid #4a4a88; 
+    box-shadow: 0 4px 15px rgba(120, 120, 200, 0.2); 
+    background-color: #2a2a4e; 
 }
 
-/* ゾーン */
 .player-wrapper .zone,
 .opponent-wrapper .zone {
     border: 2px solid #5a5a9a; 
     background-color: #3a3a5e; 
 }
 
-/* ゾーンヘッダー (ボタンでないもの) */
 .player-wrapper .zone-header,
 .opponent-wrapper .zone-header {
     background-color: #2a2a4e;
-    color: #e0e0e0; /* ⭐念のため指定 */
+    color: #e0e0e0; 
 }
 
-/* カードスロット */
 .player-wrapper .card-slot,
 .opponent-wrapper .card-slot {
     background-color: #4a4a6e; 
-    border: 1px dashed #7a7aa0; /* 枠線1本目（点線） */
-    box-shadow: 0 0 0 1px #6a6a9a inset; /* 枠線2本目（実線） */
+    border: 1px dashed #7a7aa0; 
+    box-shadow: 0 0 0 1px #6a6a9a inset; 
 }
 .player-wrapper .card-slot[data-has-card="false"],
 .opponent-wrapper .card-slot[data-has-card="false"] {
-    background-color: #3a3a5e; /* 背景を濃くする */
+    background-color: #3a3a5e; 
 }
 
-/* ドロップオーバー時 */
 .player-wrapper .drag-over,
 .opponent-wrapper .drag-over {
     background-color: #5a5a7e;
@@ -1550,34 +1143,29 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     border: 2px solid #8a8acc;
 }
 
-/* 手札フレーム */
 .player-wrapper .hand-controls-frame,
 .opponent-wrapper .hand-controls-frame {
     border: 1px solid #5a5a9a;
     background-color: #2a2a4e;
 }
 
-/* ラベル (LP, マナ, 手札, サイドバー) */
 .player-wrapper .area-label,
 .opponent-wrapper .area-label {
-    color: #a0a0e0; /* 少し明るい青紫 */
+    color: #a0a0e0; 
 }
 
-/* 手札スロットコンテナ */
 .player-wrapper .hand-zone-slots,
 .opponent-wrapper .hand-zone-slots {
     border: 1px solid #5a5a9a; 
-    background-color: #1a1a2e; /* ラッパー背景色と同じ */
+    background-color: #1a1a2e; 
 }
 
-/* カウンターグループ (LP, マナ) */
 .player-wrapper .hand-counter-group,
 .opponent-wrapper .hand-counter-group {
     border: 2px solid #5a5a9a;
     background-color: #2a2a4e;
 }
 
-/* カウンター入力欄 */
 .player-wrapper .simple-counter-buttons input[type="number"],
 .opponent-wrapper .simple-counter-buttons input[type="number"] {
     background-color: #3a3a5e;
@@ -1585,74 +1173,55 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     color: #e0e0e0;
 }
 
-/* ⭐マゾヒストモードのフリースペース枠線 */
 .player-wrapper .sidebar-bottom-half,
 .opponent-wrapper .sidebar-bottom-half {
-    border-top: 4px solid #4a4a88; /* 暗い青紫 */
+    border-top: 4px solid #4a4a88; 
 }
 
-
-/* ===================================== */
-/* 9. ⭐新規追加: S/Mモードの装飾スタイル */
-/* ===================================== */
-
-/* --- サディストモード (ピンク系) --- */
-/* .player-sadist-mode または .opponent-sadist-mode がラッパーに付与された場合 */
 
 .player-sadist-mode,
 .opponent-sadist-mode {
-    /* キーワード: 情愛, 性欲, 煽欲, 淫魔, 淫ら, 淫夢, 誘惑, 淫猥, 淫乱, 淫靡, 淫気, 色仕掛け */
     
-    /* フォントを少し流麗なセリフ体（明朝体系）に変更 */
     font-family: 'Georgia', serif;
     
-    /* ⭐サディスト: bodyのデフォルト（マゾヒスト）を上書き */
-    background-color: #FFFAFA; /* Snow - ほぼ白 */
-    color: #333; /* デフォルトの黒文字 */
+    background-color: #FFFAFA; 
+    color: #333; 
 }
 
-/* 盤面全体の背景と枠線 */
 .player-sadist-mode .game-board,
 .opponent-sadist-mode .game-board {
-    background-color: #FFF0F5; /* LavenderBlush - 薄いピンクの背景 */
-    border-color: #C71585; /* DeepPink - 濃いピンクの枠線 */
-    box-shadow: 0 4px 10px rgba(199, 21, 133, 0.4); /* 濃いピンクの影 */
+    background-color: #FFF0F5; 
+    border-color: #C71585; 
+    box-shadow: 0 4px 10px rgba(199, 21, 133, 0.4); 
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
 
-/* 各ゾーンの背景と枠線 */
 .player-sadist-mode .zone,
 .opponent-sadist-mode .zone {
-    background-color: #FFECF5; /* さらに薄いピンク */
-    border-color: #FF69B4; /* HotPink - 枠線 */
+    background-color: #FFECF5; 
+    border-color: #FF69B4; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* カードスロットの背景と枠線 */
 .player-sadist-mode .card-slot,
 .opponent-sadist-mode .card-slot {
-    background-color: #FFF5FA; /* ほとんど白に近いピンク */
-    border: 1px dashed #FF69B4; /* HotPink - 点線 */
-    box-shadow: 0 0 0 1px #C71585 inset; /* DeepPink - 内側の実線 */
+    background-color: #FFF5FA; 
+    border: 1px dashed #FF69B4; 
+    box-shadow: 0 0 0 1px #C71585 inset; 
     transition: background-color 0.3s, border-color 0.3s, box-shadow 0.3s;
 }
-/* カードがないスロットの背景を濃くする (サディストモード) */
 .player-sadist-mode .card-slot[data-has-card="false"],
 .opponent-sadist-mode .card-slot[data-has-card="false"] {
-    background-color: #FFD9EC; /* 少し濃いピンク */
+    background-color: #FFD9EC; 
 }
 
-/* ゾーンヘッダー (バトルゾーンなど、ボタン化されていないもの) */
 .player-sadist-mode .zone-header,
 .opponent-sadist-mode .zone-header {
-    background-color: #FFB6C1; /* LightPink - 背景 */
-    color: #8B008B; /* DarkMagenta - 文字色 */
-    /* font-family は親から継承 */
+    background-color: #FFB6C1; 
+    color: #8B008B; 
     transition: background-color 0.3s, color 0.3s;
 }
 
-/* ゾーンヘッダー (ボタン化されているもの: 除外、墓地、デッキなど) */
-/* (デフォルトが黄色になったため、サディストモードでの上書きは不要) */
 .player-sadist-mode .exclude-zone .zone-header,
 .player-sadist-mode .grave-zone .zone-header,
 .player-sadist-mode .side-deck-zone .zone-header,
@@ -1661,10 +1230,9 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 .opponent-sadist-mode .grave-zone .zone-header,
 .opponent-sadist-mode .side-deck-zone .zone-header,
 .opponent-sadist-mode .hand-controls-top-wrapper > .deck-zone .zone-header {
-    background-color: #ffcc00; /* 黄色 */
-    color: #333; /* 黒文字 */
-    box-shadow: 0 2.5px #997a00; /* 暗い黄色 */
-    /* font-family は親から継承 */
+    background-color: #ffcc00; 
+    color: #333; 
+    box-shadow: 0 2.5px #997a00; 
     transition: background-color 0.3s, color 0.3s, box-shadow 0.3s;
 }
 .player-sadist-mode .exclude-zone .zone-header:hover,
@@ -1675,9 +1243,8 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 .opponent-sadist-mode .grave-zone .zone-header:hover,
 .opponent-sadist-mode .side-deck-zone .zone-header:hover,
 .opponent-sadist-mode .hand-controls-top-wrapper > .deck-zone .zone-header:hover {
-    background-color: #ffdb4d; /* ホバー時 */
+    background-color: #ffdb4d; 
 }
-/* ⭐サディスト: ゾーンヘッダー (ボタン化) :active */
 .player-sadist-mode .exclude-zone .zone-header:active,
 .player-sadist-mode .grave-zone .zone-header:active,
 .player-sadist-mode .side-deck-zone .zone-header:active,
@@ -1690,76 +1257,61 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 }
 
 
-/* 手札エリア */
 .player-sadist-mode .hand-controls-frame,
 .opponent-sadist-mode .hand-controls-frame {
-    background-color: #FFF0F5; /* LavenderBlush */
-    border-color: #FF69B4; /* HotPink */
+    background-color: #FFF0F5; 
+    border-color: #FF69B4; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* 手札スロットコンテナ */
 .player-sadist-mode .hand-zone-slots,
 .opponent-sadist-mode .hand-zone-slots {
-    background-color: #C71585; /* DeepPink */
-    border-color: #8B008B; /* DarkMagenta */
+    background-color: #C71585; 
+    border-color: #8B008B; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ラベル (LP, マナ, 手札, サイドバー) と プレビューのテキスト */
 .player-sadist-mode .area-label,
 .opponent-sadist-mode .area-label,
 .player-sadist-mode .card-preview-area p,
 .opponent-sadist-mode .card-preview-area p {
-    color: #C71585; /* DeepPink */
-    /* font-family は親から継承 */
-    /* テキストに影をつけて妖艶さを出す */
-    text-shadow: 1px 1px 2px #FFB6C1; /* LightPink */
+    color: #C71585; 
+    text-shadow: 1px 1px 2px #FFB6C1; 
     transition: color 0.3s, text-shadow 0.3s;
 }
 
-/* カウンターグループ (LP, マナ) */
 .player-sadist-mode .hand-counter-group,
 .opponent-sadist-mode .hand-counter-group {
-    background-color: #FFF0F5; /* LavenderBlush */
-    border-color: #FF69B4; /* HotPink */
+    background-color: #FFF0F5; 
+    border-color: #FF69B4; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ===== ⭐ここが修正点です (ここから)===== */
-/* カウンター入力欄 (フォントと色) */
 .player-sadist-mode .simple-counter-buttons input[type="number"],
 .opponent-sadist-mode .simple-counter-buttons input[type="number"] {
-    /* font-family は親から継承 */
     color: #C71585;
     background-color: #FFF5FA;
     border-color: #FFB6C1;
 }
-/* ===== ⭐ここまで変更 ===== */
 
-/* カードプレビューエリア */
 .player-sadist-mode .card-preview-area,
 .opponent-sadist-mode .card-preview-area {
-    background-color: #FFF0F5; /* LavenderBlush */
-    border-color: #C71585; /* DeepPink */
+    background-color: #FFF0F5; 
+    border-color: #C71585; 
     transition: background-color 0.3s, border-color 0.3s;
 }
 
-/* ⭐サディストモードのフリースペース枠線 */
 .player-sadist-mode .sidebar-bottom-half,
 .opponent-sadist-mode .sidebar-bottom-half {
-    border-color: #C71585; /* DeepPink */
+    border-color: #C71585; 
 }
 
 
-/* --- ⭐サディスト: マゾヒスト（デフォルト）上書き用のスタイル追記 --- */
-
-/* 汎用カウンターボタン (サディストモードではデフォルトのグレーに戻す) */
 .player-sadist-mode .simple-counter-buttons button,
 .opponent-sadist-mode .simple-counter-buttons button,
 .player-sadist-mode .counter-btn,
 .opponent-sadist-mode .counter-btn {
-    background-color: #f0f0f0; /* 元のデフォルトに近い色 */
+    background-color: #f0f0f0; 
     color: #333;
     box-shadow: 0 2px #b0b0b0;
     border-color: #ccc;
@@ -1775,14 +1327,12 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     box-shadow: 0 0 #b0b0b0; 
 }
 
-/* 自動減少ボタン（停止してない時） */
 .player-sadist-mode .counter-btn[id$="auto-decrease-btn"],
 .opponent-sadist-mode .counter-btn[id$="auto-decrease-btn"] {
      background-color: #f0f0f0; 
      box-shadow: 0 2px #b0b0b0; 
      color: #333;
 }
-/* 自動減少ボタン（停止時） */
 .player-sadist-mode .counter-btn[id$="auto-decrease-btn"][style*="rgb(204, 0, 0)"],
 .opponent-sadist-mode .counter-btn[id$="auto-decrease-btn"][style*="rgb(204, 0, 0)"] {
      background-color: #cc0000;
@@ -1791,10 +1341,9 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 }
 
 
-/* ドローボタン（黄） (デフォルトが黄色になったため上書き不要) */
 .player-sadist-mode .draw-btn,
 .opponent-sadist-mode .draw-btn {
-    background-color: #ffcc00; /* 元の黄色 */
+    background-color: #ffcc00; 
     color: #333;
     box-shadow: 0 3px #997a00;
 }
@@ -1807,7 +1356,6 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     box-shadow: 0 0 #997a00;
 }
 
-/* マゾヒストトグルボタン (サディストモード時) (デフォルトで指定済みのため上書き不要) */
 .player-sadist-mode .draw-btn[data-mode="masochist"],
 .opponent-sadist-mode .draw-btn[data-mode="masochist"] {
     background-color: #007bff;
@@ -1823,7 +1371,6 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     box-shadow: 0 0 #0056b3;
 }
 
-/* サディストトグルボタン (サディストモード時) (デフォルトで指定済みのため上書き不要) */
 .player-sadist-mode .draw-btn[data-mode="sadist"],
 .opponent-sadist-mode .draw-btn[data-mode="sadist"] {
     background-color: #cc0000; 
@@ -1839,11 +1386,9 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     box-shadow: 0 0 #800000;
 }
 
-/* ===== ⭐ここから追加 (インポート/エクスポートボタンのサディストモード) ===== */
-/* ⭐新規追加: サディストモード時のサイドバーボタン */
 .player-sadist-mode .sidebar-button-container .draw-btn,
 .opponent-sadist-mode .sidebar-button-container .draw-btn {
-    background-color: #ffcc00; /* 黄色 */
+    background-color: #ffcc00; 
     color: #333;
     box-shadow: 0 2px #997a00;
 }
@@ -1855,31 +1400,24 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 .opponent-sadist-mode .sidebar-button-container .draw-btn:active {
     box-shadow: 0 0 #997a00;
 }
-/* ===== ⭐ここまで追加 ===== */
 
-
-/* ===================================== */
-/* 10. ⭐新規追加: カスタムコンテキストメニュー */
-/* ===================================== */
 
 .custom-context-menu {
     display: none;
-    position: absolute; /* ページ基準で配置 */
+    position: absolute; 
 
-    width: 210px; /* <-- 例: 幅を200pxに固定 */
-    font-size: 15px; /* <-- 例: フォントサイズを14pxに固定 */
+    width: 210px; 
+    font-size: 15px; 
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-    color: #333; /* 文字色 */
+    color: #333; 
     
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     z-index: 1000;
     border-radius: 5px;
     overflow: hidden;
     
-    /* フォントは S/M モード側で上書きされることを期待 */
     font-family: 'Georgia', serif; 
 }
 .custom-context-menu ul {
@@ -1893,36 +1431,29 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     transition: background-color 0.2s, color 0.2s;
 }
 
-/* --- ホーバースタイル (マゾヒストの青をデフォルト採用) --- */
 .custom-context-menu li:hover {
-    background-color: #007bff; /* マゾヒストの青 */
+    background-color: #007bff; 
     color: white;
 }
 
-/* ===================================== */
-/* 10b. ⭐新規追加: メモ編集モーダルとツールチップ */
-/* ===================================== */
-
-/* --- メモ編集モーダル (基本) --- */
 .memo-editor-modal {
-    display: none; /* JSで表示を切り替え */
+    display: none; 
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     width: 300px;
     max-width: 90vw;
-    z-index: 1001; /* コンテキストメニュー(1000)より手前 */
+    z-index: 1001; 
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #f0f0f0;
     border: 1px solid #ccc;
-    color: #333; /* 文字色 */
+    color: #333; 
     
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     border-radius: 8px;
     font-family: 'Georgia', serif;
-    overflow: hidden; /* ヘッダーの角丸のため */
+    overflow: hidden; 
 }
 
 .memo-editor-header {
@@ -1930,22 +1461,20 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     font-weight: bold;
     padding: 10px 15px;
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #e0e0e0;
     border-bottom: 1px solid #ccc;
 }
 
 .memo-editor-modal textarea {
     width: 100%;
-    box-sizing: border-box; /* padding, border を幅に含める */
+    box-sizing: border-box; 
     padding: 10px 15px;
     border: none;
-    resize: vertical; /* 縦方向のみリサイズ許可 */
+    resize: vertical; 
     min-height: 80px;
     font-family: 'Georgia', serif;
     font-size: 1em;
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #ffffff;
     color: #333;
     border-bottom: 1px solid #eee;
@@ -1957,11 +1486,9 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     gap: 10px;
     padding: 10px 15px;
     
-    /* ⭐ニュートラル: 色変更 */
     background-color: #f9f9f9;
 }
 
-/* ボタンは既存の .counter-btn スタイルを流用 */
 .memo-editor-buttons button {
     padding: 8px 12px;
     font-size: 0.9em;
@@ -1970,7 +1497,6 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     border-radius: 5px;
     cursor: pointer;
     
-    /* ⭐ニュートラル: 色変更 (グレー系) */
     background-color: #f0f0f0; 
     color: #333;
     box-shadow: 0 2px #b0b0b0; 
@@ -1985,10 +1511,9 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     transform: translateY(2px); 
 }
 
-/* 保存ボタン (黄色系) */
 .memo-editor-buttons button#memo-editor-save {
-    background-color: #ffcc00; /* 黄色 */
-    box-shadow: 0 2px #997a00; /* 暗い黄色 */
+    background-color: #ffcc00; 
+    box-shadow: 0 2px #997a00; 
 }
 .memo-editor-buttons button#memo-editor-save:hover {
     background-color: #ffdb4d;
@@ -1998,14 +1523,12 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
 }
 
 
-/* --- メモツールチップ (基本) --- */
 .memo-tooltip {
-    display: none; /* JSで表示 */
+    display: none; 
     position: absolute;
-    z-index: 1002; /* モーダルより手前 */
+    z-index: 1002; 
     
-    /* ⭐ニュートラル: 色変更 */
-    background-color: #fffacd; /* LightYellow */
+    background-color: #fffacd; 
     color: #333;
     border: 1px solid #ccc;
     
@@ -2015,41 +1538,37 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     font-family: 'Georgia', serif;
     font-size: 0.9em;
     max-width: 250px;
-    white-space: pre-wrap; /* 改行を反映 */
-    word-wrap: break-word; /* 長い単語を折り返す */
-    pointer-events: none; /* マウス操作を邪魔しない */
+    white-space: pre-wrap; 
+    word-wrap: break-word; 
+    pointer-events: none; 
 }
 
 
-/* --- サディストモード (ピンク系) の上書き --- */
-
-/* モーダル */
 .player-sadist-mode .memo-editor-modal,
 .opponent-sadist-mode .memo-editor-modal {
-    background-color: #FFF0F5; /* LavenderBlush */
-    border-color: #FF69B4; /* HotPink */
+    background-color: #FFF0F5; 
+    border-color: #FF69B4; 
     color: #333;
     font-family: 'Georgia', serif;
 }
 .player-sadist-mode .memo-editor-header,
 .opponent-sadist-mode .memo-editor-header {
-    background-color: #FFECF5; /* 薄いピンク */
-    border-bottom-color: #FFB6C1; /* LightPink */
-    color: #8B008B; /* DarkMagenta */
+    background-color: #FFECF5; 
+    border-bottom-color: #FFB6C1; 
+    color: #8B008B; 
 }
 .player-sadist-mode .memo-editor-modal textarea,
 .opponent-sadist-mode .memo-editor-modal textarea {
-    background-color: #FFF5FA; /* ほとんど白に近いピンク */
+    background-color: #FFF5FA; 
     color: #333;
     border-bottom-color: #FFECF5;
     font-family: 'Georgia', serif;
 }
 .player-sadist-mode .memo-editor-buttons,
 .opponent-sadist-mode .memo-editor-buttons {
-    background-color: #FFF0F5; /* LavenderBlush */
+    background-color: #FFF0F5; 
 }
 
-/* モーダルボタン (サディストモードでもグレー/黄色を維持) */
 .player-sadist-mode .memo-editor-buttons button,
 .opponent-sadist-mode .memo-editor-buttons button {
     background-color: #f0f0f0; 
@@ -2078,187 +1597,130 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     box-shadow: 0 0 #997a00;
 }
 
-/* ツールチップ */
 .player-sadist-mode .memo-tooltip,
 .opponent-sadist-mode .memo-tooltip {
-    background-color: #FFF0F5; /* LavenderBlush */
-    color: #8B008B; /* DarkMagenta */
-    border-color: #FF69B4; /* HotPink */
+    background-color: #FFF0F5; 
+    color: #8B008B; 
+    border-color: #FF69B4; 
     font-family: 'Georgia', serif;
 }
 
 
-/* --- マゾヒストモード (ダーク系) の上書き --- */
-
-/* モーダル */
 .player-wrapper:not(.player-sadist-mode) .memo-editor-modal,
 .opponent-wrapper:not(.opponent-sadist-mode) .memo-editor-modal {
-    background-color: #3a3a5e; /* ゾーン背景色 */
-    border-color: #5a5a9a; /* ゾーン枠線 */
+    background-color: #3a3a5e; 
+    border-color: #5a5a9a; 
     color: #e0e0e0;
     font-family: 'Georgia', serif;
 }
 .player-wrapper:not(.player-sadist-mode) .memo-editor-header,
 .opponent-wrapper:not(.opponent-sadist-mode) .memo-editor-header {
-    background-color: #2a2a4e; /* 盤面背景色 */
+    background-color: #2a2a4e; 
     border-bottom-color: #5a5a9a;
-    color: #a0a0e0; /* ラベル色 */
+    color: #a0a0e0; 
 }
 .player-wrapper:not(.player-sadist-mode) .memo-editor-modal textarea,
 .opponent-wrapper:not(.opponent-sadist-mode) .memo-editor-modal textarea {
-    background-color: #4a4a6e; /* スロット背景色 */
+    background-color: #4a4a6e; 
     color: #e0e0e0;
     border-bottom-color: #2a2a4e;
     font-family: 'Georgia', serif;
 }
 .player-wrapper:not(.player-sadist-mode) .memo-editor-buttons,
 .opponent-wrapper:not(.opponent-sadist-mode) .memo-editor-buttons {
-    background-color: #3a3a5e; /* ゾーン背景色 */
+    background-color: #3a3a5e; 
 }
 
-/* モーダルボタン (マゾヒストモードでもグレー/黄色を維持) */
-/* (デフォルトのニュートラルがグレー系なので上書き不要) */
-
-/* ツールチップ */
 .player-wrapper:not(.player-sadist-mode) .memo-tooltip,
 .opponent-wrapper:not(.opponent-sadist-mode) .memo-tooltip {
-    background-color: #3a3a5e; /* ゾーン背景色 */
+    background-color: #3a3a5e; 
     color: #e0e0e0;
-    border-color: #5a5a9a; /* ゾーン枠線 */
+    border-color: #5a5a9a; 
     font-family: 'Georgia', serif;
 }
 
 
-/* ===================================== */
-/* 11. ⭐修正: スタック（重ね）表示スタイル */
-/* ===================================== */
-
-/* ⭐ 修正点 1/2: 
- * デフォルトの .card-slot (L.217) は overflow: hidden; になっています。
- * .stacked が付与されたスロットは、はみ出して表示させるために overflow: visible; に変更します。
- */
 .card-slot.stacked {
     overflow: visible;
 }
 
-/* * スタック状態のスロット（.card-slot.stacked）内の
- * カード（.thumbnail）の表示を調整します。
- */
 .card-slot.stacked .thumbnail {
-    /* 重なり順や位置が変わる際に、滑らかにアニメーションさせます */
-    /* ⭐ 1. 修正: box-shadow を transition に追加 */
     transition: transform 0.2s ease-out, z-index 0s 0.2s, opacity 0.2s, box-shadow 0.2s ease-out;
     
-    /* 既に position: absolute; が設定されているため、transformで位置をずらします */
-    
-    /* ⭐ 修正点 2/2: 
-     * はみ出した部分がクリックできるようにポインタイベントを有効化します。
-     * また、枠線を追加して重なりを強調します。
-     */
-    pointer-events: auto; /* クリックイベントを受け取れるように */
+    pointer-events: auto; 
     border: 1px solid rgba(255, 255, 255, 0.3);
-    border-radius: 3px; /* スロットの枠線に合わせて調整 */
-    box-sizing: border-box; /* 枠線がサイズに含まれるように */
+    border-radius: 3px; 
+    box-sizing: border-box; 
 }
 
-/* 一番上のカード (DOMの最後) */
 .card-slot.stacked .thumbnail:last-child {
     transform: translateY(0);
     z-index: 10; 
 }
 
-/* 2番目のカード (最後から2番目) */
 .card-slot.stacked .thumbnail:nth-last-child(2) {
-    transform: translateY(6%); /* 下に 15% ずらす */
+    transform: translateY(6%); 
     z-index: 9;
 }
 
-/* 3番目のカード (最後から3番目) */
 .card-slot.stacked .thumbnail:nth-last-child(3) {
-    transform: translateY(12%); /* さらにずらす */
+    transform: translateY(12%); 
     z-index: 8;
 }
 
-/* 4番目のカード */
 .card-slot.stacked .thumbnail:nth-last-child(4) {
     transform: translateY(18%);
     z-index: 7;
 }
 
-/* 5番目以降（ずらしすぎるとスロットからはみ出るため制限） */
 .card-slot.stacked .thumbnail:nth-last-child(n+5) {
     transform: translateY(24%);
     z-index: 6;
 }
 
-/* ⭐ 2. 削除: 既存の :last-child:hover スタイルを削除 */
-/* (L.1384-L.1386) */
 
-
-/* ===================================== */
-/* 12. ⭐修正: スタックホバー時の強調 */
-/* ===================================== */
-
-/* ⭐ 3. 修正: ホバー時に「その場で」浮かび上がらせるスタイル */
-
-/* 共通のホバー効果 (z-index, shadow, opacity) */
 .card-slot.stacked .thumbnail:hover {
     z-index: 11; 
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
     opacity: 1;
 }
 
-/* * ホバー時に元の translateY を維持しつつ scale(1.05) を適用 
- * (元の transform を上書き)
- */
 
-/* 一番上のカード (DOMの最後) */
 .card-slot.stacked .thumbnail:last-child:hover {
     transform: translateY(0) scale(1.05);
 }
 
-/* 2番目のカード (最後から2番目) */
 .card-slot.stacked .thumbnail:nth-last-child(2):hover {
-    transform: translateY(6%) scale(1.01); /* 15% のまま scale */
+    transform: translateY(6%) scale(1.01); 
 }
 
-/* 3番目のカード (最後から3番目) */
 .card-slot.stacked .thumbnail:nth-last-child(3):hover {
-    transform: translateY(12%) scale(1.01); /* 30% のまま scale */
+    transform: translateY(12%) scale(1.01); 
 }
 
-/* 4番目のカード */
 .card-slot.stacked .thumbnail:nth-last-child(4):hover {
-    transform: translateY(28%) scale(1.01); /* 45% のまま scale */
+    transform: translateY(28%) scale(1.01); 
 }
 
-/* 5番目以降 */
 .card-slot.stacked .thumbnail:nth-last-child(n+5):hover {
-    transform: translateY(24%) scale(1.01); /* 60% のまま scale */
+    transform: translateY(24%) scale(1.01); 
 }
 
 
-/* ホバーされていない兄弟要素は少し暗くする (オプション) */
 .card-slot.stacked:hover .thumbnail:not(:hover) {
     opacity: 0.7;
 }
 
-/* ===================================== */
-/* 13. ⭐新規追加: カードカウンターのスタイル */
-/* ===================================== */
-
-/* カードカウンターのオーバーレイ */
 .thumbnail .card-counter-overlay {
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     
-    font-size: 2.5em; /* 見やすいように大きく */
+    font-size: 2.5em; 
     font-weight: bold;
-    color: white; /* 白文字 */
+    color: white; 
     
-    /* 文字の縁取り (黒) */
     text-shadow: 
         -2px -2px 0 #000,  
          2px -2px 0 #000,
@@ -2269,7 +1731,7 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
          0   -2px 0 #000,
          0    2px 0 #000;
          
-    background-color: rgba(0, 0, 0, 0.0); /* 背景は透明 */
+    background-color: rgba(0, 0, 0, 0.0); 
     padding: 5px;
     border-radius: 50%; 
     
@@ -2277,77 +1739,62 @@ body.board-flipped .player-wrapper #sidebar-container .draw-btn {
     justify-content: center;
     align-items: center;
     
-    z-index: 15; /* サムネイル画像 (z-index: 5) より手前 */
+    z-index: 15; 
     user-select: none;
-    pointer-events: none; /* クリックイベントを通過させる */
+    pointer-events: none; 
     
-    display: none; /* 初期状態 (カウンター0) では非表示 */
+    display: none; 
 }
 
-/* * 相手側のボードで反転している場合、カウンターの数字も反転解除する 
- * (opponent-wrapper .count-overlay と同様のロジック)
- */
 .opponent-wrapper .thumbnail .card-counter-overlay {
     transform: translate(-50%, -50%) scaleY(-1) translateZ(0);
     z-index: 20; 
 }
 
-/* 盤面反転時: 相手側の反転解除を解除 */
 body.board-flipped .opponent-wrapper .thumbnail .card-counter-overlay {
     transform: translate(-50%, -50%); 
 }
-/* 盤面反転時: プレイヤー側の反転解除 */
 body.board-flipped .player-wrapper .thumbnail .card-counter-overlay {
     transform: translate(-50%, -50%) scaleY(-1) translateZ(0);
     z-index: 20;
 }
 
-/* ===================================== */
-/* 14. ⭐新規追加: ダイス/コイントス機能 */
-/* ===================================== */
-
-/* 結果表示エリアのスタイル */
 .random-result-display {
     width: 100%;
-    min-height: 50px; /* 結果表示に十分な高さ */
+    min-height: 50px; 
     padding: 5px;
     box-sizing: border-box;
     text-align: center;
-    font-size: 1em; /* 結果を大きく表示 */
+    font-size: 1em; 
     font-weight: bold;
     line-height: 1.2;
     display: flex;
     justify-content: center;
     align-items: center;
     
-    /* ⭐ニュートラル: 色変更 (カウンター入力欄に合わせる) */
     background-color: #444;
     border: 1px solid #666;
     color: #ccc;
     
     border-radius: 5px;
-    margin-top: 2px; /* ラベルとの間隔 */
-    margin-bottom: 5px; /* ボタンとの間隔 */
+    margin-top: 2px; 
+    margin-bottom: 5px; 
     
-    /* フォントは親から継承 */
 }
 
-/* ボタンコンテナ (横並び) */
 .random-buttons {
     display: flex;
     gap: 5px;
     width: 100%;
 }
 
-/* ボタンは .counter-btn を流用するが、幅を均等にする */
 .random-buttons .counter-btn {
     flex-grow: 1;
     width: 50%;
-    padding: 4px 6px; /* 少し詰める */
-    font-size: 1em; /* 少し小さく */
+    padding: 4px 6px; 
+    font-size: 1em; 
 }
 
-/* --- サディストモード (ピンク系) の上書き --- */
 .player-sadist-mode .random-result-display,
 .opponent-sadist-mode .random-result-display {
     color: #C71585;
@@ -2355,10 +1802,44 @@ body.board-flipped .player-wrapper .thumbnail .card-counter-overlay {
     border-color: #FFB6C1;
 }
 
-/* --- マゾヒストモード (ダーク系) の上書き --- */
 .player-wrapper:not(.player-sadist-mode) .random-result-display,
 .opponent-wrapper:not(.opponent-sadist-mode) .random-result-display {
-    background-color: #3a3a5e; /* ゾーン背景色 */
-    border-color: #5a5a9a; /* ゾーン枠線 */
+    background-color: #3a3a5e; 
+    border-color: #5a5a9a; 
     color: #e0e0e0;
+}
+
+.lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.85);
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    z-index: 2000;
+    cursor: pointer;
+    
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.lightbox-overlay.show {
+    opacity: 1;
+    visibility: visible;
+}
+
+.lightbox-overlay img {
+    max-width: 90vw;
+    max-height: 90vh;
+    object-fit: contain;
+    border-radius: 10px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+    
+    cursor: default; 
 }
