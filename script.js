@@ -585,14 +585,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             
-            const imgElement = thumbnailElement.querySelector('.card-image');
-            if (imgElement && sourceBaseZoneId === 'mana') {
-                let currentRotation = parseInt(imgElement.dataset.rotation) || 0;
-                if (currentRotation === 90) {
-                    const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                    updateManaCounterValue(currentValue - 1);
-                }
-            }
+            // ▼▼▼ 修正点 1 ▼▼▼
+            // const imgElement = thumbnailElement.querySelector('.card-image');
+            // if (imgElement && sourceBaseZoneId === 'mana') {
+            //     let currentRotation = parseInt(imgElement.dataset.rotation) || 0;
+            //     if (currentRotation === 90) {
+            //         const currentValue = parseInt(manaCounterValueElement.value) || 0;
+            //         updateManaCounterValue(currentValue - 1);
+            //     }
+            // }
+            // ▲▲▲ 修正点 1 ▲▲▲
 
             sourceSlot.removeChild(thumbnailElement);
             resetSlotToDefault(sourceSlot);
@@ -801,14 +803,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const parentZoneId = getParentZoneId(slotElement);
                     const baseParentZoneId = getBaseId(parentZoneId); 
                     
-                    if (baseParentZoneId === 'mana') {
-                        const imgElement = thumbnailElement.querySelector('.card-image');
-                        let currentRotation = parseInt(imgElement.dataset.rotation) || 0;
-                        if (currentRotation === 90) {
-                            const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                            updateManaCounterValue(currentValue - 1);
-                        }
-                    }
+                    // ▼▼▼ 修正点 3 ▼▼▼
+                    // if (baseParentZoneId === 'mana') {
+                    //     const imgElement = thumbnailElement.querySelector('.card-image');
+                    //     let currentRotation = parseInt(imgElement.dataset.rotation) || 0;
+                    //     if (currentRotation === 90) {
+                    //         const currentValue = parseInt(manaCounterValueElement.value) || 0;
+                    //         updateManaCounterValue(currentValue - 1);
+                    //     }
+                    // }
+                    // ▲▲▲ 修正点 3 ▲▲▲
                     
                     slotElement.removeChild(thumbnailElement);
                     cardPreviewArea.innerHTML = '<p>カードにカーソルを合わせてください</p>'; 
@@ -1075,13 +1079,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     let targetZoneId = getParentZoneId(slot);
                     let targetBaseZoneId = getBaseId(targetZoneId); 
 
-                    const imgElement = draggedItem.querySelector('.card-image');
-                    let cardRotation = parseInt(imgElement.dataset.rotation) || 0;
+                    // ▼▼▼ 修正点 2 ▼▼▼
+                    // const imgElement = draggedItem.querySelector('.card-image');
+                    // let cardRotation = parseInt(imgElement.dataset.rotation) || 0;
                     
-                    if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
-                        const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                        updateManaCounterValue(currentValue - 1);
-                    }
+                    // if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
+                    //     const currentValue = parseInt(manaCounterValueElement.value) || 0;
+                    //     updateManaCounterValue(currentValue - 1);
+                    // }
+                    // ▲▲▲ 修正点 2 ▲▲▲
 
                     let sourceArrangementId = null;
                     if (sourceBaseZoneId === 'deck-back-slots' || sourceBaseZoneId === 'grave-back-slots' || sourceBaseZoneId === 'exclude-back-slots' || sourceBaseZoneId === 'side-deck-back-slots' || sourceBaseZoneId === 'hand-zone') {
@@ -1111,10 +1117,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         if (isDecorationMode && getBaseId(destinationArrangementId) !== 'hand-zone') {
                             console.log("装飾モード中は裏面スロットへのカード移動はできません。");
                             
-                            if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
-                                const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                                updateManaCounterValue(currentValue + 1);
-                            }
+                            // ▼▼▼ 修正点 2 の一部（ドラッグキャンセル時のマナ戻し）▼▼▼
+                            // if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
+                            //     const currentValue = parseInt(manaCounterValueElement.value) || 0;
+                            //     updateManaCounterValue(currentValue + 1);
+                            // }
+                            // ▲▲▲ 修正点 2 の一部 ▲▲▲
                             return; 
                         }
                         
@@ -1128,10 +1136,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                 targetZoneId = getParentZoneId(actualTargetSlot); 
                             } else {
                                 console.log(`${destinationArrangementId} スロットが全て埋まっています。移動できません。`);
-                                if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
-                                    const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                                    updateManaCounterValue(currentValue + 1);
-                                }
+                                // ▼▼▼ 修正点 2 の一部（ドラッグキャンセル時のマナ戻し）▼▼▼
+                                // if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
+                                //     const currentValue = parseInt(manaCounterValueElement.value) || 0;
+                                //     updateManaCounterValue(currentValue + 1);
+                                // }
+                                // ▲▲▲ 修正点 2 の一部 ▲▲▲
                                 return;
                             }
                         } else {
@@ -1143,10 +1153,12 @@ document.addEventListener('DOMContentLoaded', () => {
                                     targetZoneId = getParentZoneId(actualTargetSlot); 
                                 } else {
                                     console.log(`${destinationArrangementId} スロットが全て埋まっています。移動できません。`);
-                                    if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
-                                        const currentValue = parseInt(manaCounterValueElement.value) || 0;
-                                        updateManaCounterValue(currentValue + 1);
-                                    }
+                                    // ▼▼▼ 修正点 2 の一部（ドラッグキャンセル時のマナ戻し）▼▼▼
+                                    // if (sourceBaseZoneId === 'mana' && cardRotation === 90) {
+                                    //     const currentValue = parseInt(manaCounterValueElement.value) || 0;
+                                    //     updateManaCounterValue(currentValue + 1);
+                                    // }
+                                    // ▲▲▲ 修正点 2 の一部 ▲▲▲
                                     return;
                                 }
                             }
